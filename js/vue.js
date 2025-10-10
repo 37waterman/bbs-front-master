@@ -1,7 +1,7 @@
 let token = null;
 
 new Vue({
-    el: '#app',
+    el: '#post',
     data() {
         return {
             postId: null,
@@ -64,6 +64,7 @@ new Vue({
             });
         },
         viewPost(post) {
+            this.postId = post.id;
             // 填充帖子详情内容
 
             document.getElementById('longPost').style.display = 'none';
@@ -90,7 +91,20 @@ new Vue({
                 .catch(err => {
                     alert(`请求错误: ${err.response.data.message}`);
                 });
-        }
+        },
+        addComment() {
+            axios
+                .post(`http://8.148.233.225:8081/comment/${this.postId}`, {
+                    content: document.getElementById('reply-content').value
+                })
+                .then(response => {
+                    alert('评论成功');
+                    this.getComment(postId);
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`);
+                });
+        },
 
 
     }
