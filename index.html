@@ -151,12 +151,12 @@
 
 
                     <!-- 展示所有回复 -->
-                    <div id="singlePost_reply_show">
+                    <div id="singlePost_reply_show" v-for="c in comment">
 
                         <img src="./images/广金校徽.webp" alt="">
-                        <div id="singlePost_replyer_Name">一楼:</div>
+                        <div id="singlePost_replyer_Name"  >{{c.userId}} : </div>
 
-                        <p id="replyer_word">一楼回复的话</p>
+                        <p id="replyer_word">{{c.content}}</p>
                     </div>
 
                 </div>
