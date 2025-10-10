@@ -32,7 +32,6 @@ window.addEventListener('resize', calculateMiddleWidth);
 
 
 
-
 // 注册登录界面
 // const screen = document.querySelector('#screen');
 //
@@ -169,10 +168,10 @@ inside_suggest_cancel.addEventListener('click', () => {
 // singlePost_back.addEventListener('click', () => {
 //     ul_longPost.style.display = "block";
 //     singlePost.style.display = "none";
-    // ul_longPost.style.opacity = "1";
-    // singlePost.style.opacity = "0";
-    // ul_longPost.style.zIndex = "2";
-    // singlePost.style.zIndex = "1";
+// ul_longPost.style.opacity = "1";
+// singlePost.style.opacity = "0";
+// ul_longPost.style.zIndex = "2";
+// singlePost.style.zIndex = "1";
 // })
 // axios部分
 // axios.get('http://127.0.0.1:8080/posts').then((result) => {
