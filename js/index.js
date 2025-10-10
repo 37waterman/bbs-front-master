@@ -447,6 +447,3 @@ avatar.addEventListener('click', function () {
         avatarInput.click();
     }
 });
-
-// 页面加载时，初始化获取用户信息
-fetchUserInfo();

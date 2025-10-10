@@ -1,4 +1,4 @@
-let token = null;
+let token = localStorage.getItem('userToken');
 
 new Vue({
     el: '#post',
@@ -95,11 +95,16 @@ new Vue({
         addComment() {
             axios
                 .post(`http://8.148.233.225:8081/comment/${this.postId}`, {
-                    content: document.getElementById('reply-content').value
-                })
+                        content: document.getElementById('reply-content').value
+                    }, {
+                        headers: {
+                            'token': token
+                        }
+                    }
+                )
                 .then(response => {
                     alert('评论成功');
-                    this.getComment(postId);
+                    this.getComment(this.postId);
                 })
                 .catch(err => {
                     alert(`请求错误: ${err.response.data.message}`);
@@ -117,11 +122,9 @@ new Vue({
 
     methods: {
         login() {
-
             document.getElementById('container').style.display = "block";
             document.querySelector('.cancel').style.display = "block";
             document.getElementById('screen').style.display = "block";
-            alert("登录")
         }
     }
 })
@@ -188,6 +191,7 @@ new Vue({
                 .then(response => {
                     alert('登录成功')
                     token = response.data.data;
+                    localStorage.setItem('userToken', token);
                     alert(token);
                     document.getElementById('container').style.display = "none";
                     document.getElementById('cancel').style.display = "none";
@@ -220,7 +224,7 @@ new Vue({
 
 
 
-new vue({
+new Vue({
     el: '#user-center',
     data() {
         return {
@@ -233,7 +237,7 @@ new vue({
         }
     },
     created() {
-        getInfo();
+        this.getInfo();
     },
     methods: {
         getInfo() {
@@ -242,13 +246,13 @@ new vue({
                     headers: {
                         'token': token
                     }
-                }
+                })
                     .then(response => {
                         this.information.avatarInput = response.data.data.avatarUrl;
-                        this.information.accountInput = response.data.data.userName;
-                        this.information, emailInput = response.data.data.email;
+                        this.information.accountInput = response.data.data.username;
+                        this.information.emailInput = response.data.data.email;
                     })
-                )
+
         }
     }
 })
