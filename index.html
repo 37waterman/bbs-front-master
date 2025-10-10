@@ -70,7 +70,7 @@
                 </button>
             </form>
             <!-- 所有论坛的长条 -->
-            <div id="app">
+            <div id="post">
                 <ul id="longPost">
                     <h2 class="todayTopic">今日主题</h2>
 
@@ -145,18 +145,18 @@
 
                     <!-- 用户准备写的评论 -->
                     <div id="singlePost_reply_write">
-                        <textarea name="reply-content" rows="4" placeholder="写下你的回复..."></textarea>
-                        <button id="singlePost_reply_button">提交</button>
+                        <textarea id="reply-content" rows="4" placeholder="写下你的回复..."></textarea>
+                        <button id="singlePost_reply_button" @click="addComment">提交</button>
                     </div>
 
 
                     <!-- 展示所有回复 -->
-                    <div id="singlePost_reply_show">
+                    <div id="singlePost_reply_show" v-for="c in comment">
 
                         <img src="./images/广金校徽.webp" alt="">
-                        <div id="singlePost_replyer_Name">一楼:</div>
+                        <div id="singlePost_replyer_Name"  >{{c.userId}} : </div>
 
-                        <p id="replyer_word">一楼回复的话</p>
+                        <p id="replyer_word">{{c.content}}</p>
                     </div>
 
                 </div>

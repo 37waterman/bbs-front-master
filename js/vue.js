@@ -1,10 +1,12 @@
 let token = null;
 
 new Vue({
-    el: '#app',
+    el: '#post',
     data() {
         return {
+            postId: null,
             post: null,
+            comment: null,
             total: 0,
             loading: false,
             error: null,
@@ -62,6 +64,7 @@ new Vue({
             });
         },
         viewPost(post) {
+            this.postId = post.id;
             // 填充帖子详情内容
 
             document.getElementById('longPost').style.display = 'none';
@@ -70,12 +73,38 @@ new Vue({
             document.getElementById('singlePost_user_information_userName').textContent = post.userId;
             document.getElementById('singlePost_user_information_time').textContent = this.formatTime(post.createdTime);
             document.getElementById('singlePost_content').textContent = post.content || '暂无内容';
+
+            this.getComment(post.id);
         },
         viewBackPostList() {
             alert("返回帖子列表")
             document.getElementById('longPost').style.display = 'block';
             document.getElementById('singlePost').style.display = 'none';
-        }
+        },
+        getComment(postId) {
+            axios
+                .get(`http://8.148.233.225:8081/comment/${postId}`)
+                .then(response => {
+                    console.log('完整响应数据:', response.data);
+                    this.comment = response.data.data.rows;
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`);
+                });
+        },
+        addComment() {
+            axios
+                .post(`http://8.148.233.225:8081/comment/${this.postId}`, {
+                    content: document.getElementById('reply-content').value
+                })
+                .then(response => {
+                    alert('评论成功');
+                    this.getComment(postId);
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`);
+                });
+        },
 
 
     }
