@@ -154,9 +154,9 @@
                     <div id="singlePost_reply_show">
 
                         <img src="./images/广金校徽.webp" alt="">
-                        <div id="singlePost_replyer_Name">一楼:</div>
+                        <div id="singlePost_replyer_Name" v-for="c in comment">{{c.userId}}</div>
 
-                        <p id="replyer_word">一楼回复的话</p>
+                        <p id="replyer_word">一{{c.content}}</p>
                     </div>
 
                 </div>

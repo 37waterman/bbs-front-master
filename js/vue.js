@@ -1,10 +1,13 @@
+
 let token = null;
 
 new Vue({
     el: '#app',
     data() {
         return {
+            nowPost: null,
             post: null,
+            comment: null,
             total: 0,
             loading: false,
             error: null,
@@ -63,7 +66,7 @@ new Vue({
         },
         viewPost(post) {
             // 填充帖子详情内容
-
+            this.nowPost = post.id;
             document.getElementById('longPost').style.display = 'none';
             document.getElementById('singlePost').style.display = 'block';
             document.getElementById('singlePost_topic_in').textContent = post.title;
@@ -75,6 +78,18 @@ new Vue({
             alert("返回帖子列表")
             document.getElementById('longPost').style.display = 'block';
             document.getElementById('singlePost').style.display = 'none';
+        },
+        getComment(postId) {
+            axios
+                .get(`http://8.148.233.225:8081/comments/${postId}`)
+                .then(response => {
+                    console.log('完整响应数据:', response.data);
+                    this.comment = response.data.data.rows;
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`);
+
+                });
         }
 
 
@@ -151,7 +166,7 @@ new Vue({
 
                 });
         },
-        Login(){
+        Login() {
             this.loginInfo.username = document.getElementById('userName').value;
             this.loginInfo.password = document.getElementById('password').value;
             axios
@@ -159,7 +174,7 @@ new Vue({
                 .then(response => {
                     alert('登录成功')
                     token = response.data.data;
-                    alert( token);
+                    alert(token);
                     document.getElementById('container').style.display = "none";
                     document.getElementById('cancel').style.display = "none";
                     document.getElementById('screen').style.display = "none";
