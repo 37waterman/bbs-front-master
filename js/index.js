@@ -352,43 +352,8 @@ const infoInputs = document.querySelectorAll('.info-input');
 const avatar = document.getElementById('avatar');
 const avatarInput = document.getElementById('avatarInput');
 
-// ---------- 1. 初始化：从后端获取用户信息 ----------
-async function fetchUserInfo() {
-    try {
-        const response = await axios.get('/api/user/info');
-        const user = response.data;
 
-        // 填充用户数据到页面
-        document.getElementById('account').textContent = user.account;
-        document.getElementById('accountInput').value = user.account;
-        document.getElementById('nickname').textContent = user.nickname;
-        document.getElementById('nicknameInput').value = user.nickname;
 
-        document.getElementById('email').textContent = user.email;
-        document.getElementById('emailInput').value = user.email;
-
-        document.getElementById('college').textContent = user.college;
-        document.getElementById('collegeInput').value = user.college;
-        document.getElementById('major').textContent = user.major;
-        document.getElementById('majorInput').value = user.major;
-        document.getElementById('hobby').textContent = user.hobby;
-        document.getElementById('hobbyInput').value = user.hobby;
-        document.getElementById('collectCount').textContent = user.collectCount;
-        document.getElementById('collectCountInput').value = user.collectCount;
-        document.getElementById('commentCount').textContent = user.commentCount;
-        document.getElementById('commentCountInput').value = user.commentCount;
-
-        // 处理头像（如果后端返回了头像 URL）
-        if (user.avatarUrl) {
-            avatar.style.backgroundImage = `url(${user.avatarUrl})`;
-            avatar.style.backgroundSize = 'cover';
-            avatar.style.color = 'transparent'; // 隐藏“头像”文字
-        }
-    } catch (error) {
-        console.error('获取用户信息失败：', error);
-        // alert('获取用户信息失败，请稍后重试');
-    }
-}
 
 // ---------- 2. 切换“编辑/查看”模式 ----------
 function switchToEditMode() {

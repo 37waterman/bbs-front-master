@@ -151,7 +151,7 @@ new Vue({
 
                 });
         },
-        Login(){
+        Login() {
             this.loginInfo.username = document.getElementById('userName').value;
             this.loginInfo.password = document.getElementById('password').value;
             axios
@@ -159,7 +159,7 @@ new Vue({
                 .then(response => {
                     alert('登录成功')
                     token = response.data.data;
-                    alert( token);
+                    alert(token);
                     document.getElementById('container').style.display = "none";
                     document.getElementById('cancel').style.display = "none";
                     document.getElementById('screen').style.display = "none";
@@ -182,6 +182,44 @@ new Vue({
             alert("进入用户中心");
             document.getElementById('longPost').style.display = "none";
             document.getElementById('user-center').style.display = "block";
+        }
+    }
+})
+
+
+
+
+
+
+new vue({
+    el: '#user-center',
+    data() {
+        return {
+            information: {
+                avatarInput: '',
+                accountInput: '',
+                emailInput: '',
+            }
+
+        }
+    },
+    created() {
+        getInfo();
+    },
+    methods: {
+        getInfo() {
+            axios
+                .get('http://8.148.233.225:8081/user/me', {
+                    headers: {
+                        'token': token
+                    }
+                }
+                    .then(response => {
+                        this.information.avatarInput = response.data.data.avatarUrl;
+                        this.information.accountInput = response.data.data.userName;
+                        this.information, emailInput = response.data.data.email;
+                    })
+                )
         }
     }
 })
