@@ -16,6 +16,7 @@
     <!-- 引入axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+
 </head>
 
 <body>
@@ -34,7 +35,7 @@
     </div>
 </div>
 
-<div class="content">
+<div class="content" id="content">
     <div class="left_nav" id="left_nav">
         <h2>导航</h2>
         <h4>板块</h4>
@@ -77,13 +78,13 @@
             <ul id="longPost">
                 <h2 class="todayTopic">今日主题</h2>
 
-                <li v-for="p in post">
+                <li v-for="p in postList">
                     <hr>
                     <a href="javascript:void(0)" @click="viewPost(p)">{{p.title}}</a>
                     <span>&nbsp&nbsp&nbsp{{p.subtitle}}</span>
                     <div class="every_bottom">
                         <!--bug1-->
-                        <p>{{p.userId}} {{p.createdTime}}</p>
+                        <p>{{p.username}} {{p.createdTime}}</p>
                         <div>
                             <svg class="icon" width="200px" height="200.00px" viewBox="0 0 1024 1024" version="1.1"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -108,8 +109,7 @@
 
             <!-- 单个论坛 -->
             <div id="singlePost">
-                <button @click="viewBackPostList">返回</button>
-                <div id="singlePost_back" style="display: inline-block; cursor: pointer;">
+                <div id="singlePost_back" @click="viewBackPostList">
                     <svg class="icon" width="20px" height="20.00px" viewBox="0 0 1024 1024" version="1.1"
                          xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -118,7 +118,7 @@
 
                     </svg>
                 </div>
-                <div id="singlePost_topic_in">标题</div>
+                <div id="singlePost_topic_in">{{postInfo.title}}</div>
                 <div id="every_bottom">
                     <div>
                         <svg class="icon" width="20px" height="20px" viewBox="0 0 1024 1024" version="1.1"
@@ -126,23 +126,23 @@
                             <path
                                     d="M406.61667249 594.25040197c-64.25812653 0-125.94592804-25.70325061-169.64145421-69.3987767-46.26585106-46.26585106-69.39877668-105.38332751-69.39877669-169.64145411s25.70325061-125.94592804 69.39877669-169.64145407c46.26585106-46.26585106 105.38332751-69.39877668 169.64145421-69.39877671s125.94592804 25.70325061 169.64145404 69.39877671c46.26585106 46.26585106 69.39877668 105.38332751 69.39877664 169.64145407s-25.70325061 125.94592804-69.39877664 169.64145411c-43.69552609 46.26585106-105.38332751 69.39877668-169.64145404 69.3987767z m0-416.39266014c-97.67235237 0-177.35242935 79.68007695-177.35242942 177.35242933 0 97.67235237 79.68007695 177.35242935 177.35242942 177.35242931 97.67235237 0 177.35242935-79.68007695 177.35242926-177.35242931 0-97.67235237-79.68007695-177.35242935-177.35242926-177.35242933zM787.02478172 910.40038475h-64.25812657c0-84.82072701-33.41422579-164.50080404-92.53170232-223.61828048s-138.79755333-92.53170228-223.61828034-92.5317023c-84.82072701 0-164.50080404 33.41422579-223.61828053 92.5317023-59.11747646 59.11747646-92.53170228 138.79755333-92.53170232 223.61828048h-64.25812658c0-51.40650127 10.2813003-100.24267745 30.84390079-149.07885369 17.99227542-46.26585106 46.26585106-84.82072701 82.25040205-120.8052779 35.98455091-35.98455091 74.53942682-61.68780147 120.80527793-82.2504021 46.26585106-20.56260047 97.67235237-30.84390082 149.0788537-30.84390071s100.24267745 10.2813003 149.07885353 30.84390071c46.26585106 17.99227542 84.82072701 46.26585106 120.80527807 82.2504021 35.98455091 35.98455091 61.68780147 74.53942682 82.25040193 120.8052779 15.42195035 48.83617618 25.70325061 97.67235237 25.70325066 149.07885369zM730.47763039 522.2813003l-28.27357572-59.11747648c56.54715136-28.27357574 89.96137716-77.10975185 89.9613772-133.6569033 0-84.82072701-79.68007695-151.64917873-177.3524294-151.64917869v-64.25812658c64.25812653 0 123.37560301 23.13292557 169.64145418 61.68780155 46.26585106 41.12520094 71.96910175 95.10202723 71.96910176 154.21950372 0 82.25040197-48.83617618 154.21950379-125.94592802 192.77437978zM995.22111182 841.00160804h-64.25812663c0-77.10975185-25.70325061-149.07885366-71.96910176-208.19633014-46.26585106-56.54715136-110.52397762-95.10202723-179.9227543-107.95365263l12.85162528-64.25812654c84.82072701 15.42195035 161.93047901 61.68780147 218.47763034 131.08657822 53.97682629 69.39877668 84.82072701 159.36015393 84.82072707 249.32153109z"/>
                         </svg>
-                        <span>浏览人数&nbsp&nbsp&nbsp</span>
+                        <span>浏览人数&nbsp&nbsp&nbsp{{postInfo.viewsCount}}</span>
                         <svg class="icon" width="20px" height="20px" viewBox="0 0 1024 1024" version="1.1"
                              xmlns="http://www.w3.org/2000/svg">
                             <path
                                     d="M176 193c-17.673 0-32 14.327-32 32v481c0 17.673 14.327 32 32 32h27c51.915 0 94 42.085 94 94v45.5a1.94 1.94 0 0 0 3.293 1.388l117.045-114.176A94 94 0 0 1 482.976 738H848c17.673 0 32-14.327 32-32V225c0-17.673-14.327-32-32-32H176z m0-80h672c61.856 0 112 50.144 112 112v481c0 61.856-50.144 112-112 112H482.976a14 14 0 0 0-9.776 3.978L356.156 936.154c-32.394 31.6-84.271 30.956-115.87-1.437A81.94 81.94 0 0 1 217 877.5V832c0-7.732-6.268-14-14-14h-27c-61.856 0-112-50.144-112-112V225c0-61.856 50.144-112 112-112z m336 438c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64 35.346 0 64 28.654 64 64 0 35.346-28.654 64-64 64z m228 0c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64 35.346 0 64 28.654 64 64 0 35.346-28.654 64-64 64z m-456 0c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64 35.346 0 64 28.654 64 64 0 35.346-28.654 64-64 64z"
                                     fill="#333333"/>
                         </svg>
-                        <span>评论</span>
+                        <span>评论数&nbsp&nbsp&nbsp{{postInfo.commentsCount}}</span>
                     </div>
                 </div>
                 <hr>
                 <div id="singlePost_user_information">
-                    <img src="./images/广金校徽.webp" alt="">
-                    <div id="singlePost_user_information_userName">昵称</div>
-                    <div id="singlePost_user_information_time">发布时间</div>
+                    <img alt="" :src="postInfo.userUrl">
+                    <div id="singlePost_user_information_userName">{{postInfo.username}}</div>
+                    <div id="singlePost_user_information_time">{{postInfo.createdTime}}</div>
                 </div>
-                <div id="singlePost_content">正文</div>
+                <div id="singlePost_content">{{postInfo.content}}</div>
                 <hr>
 
 
@@ -154,10 +154,10 @@
 
 
                 <!-- 展示所有回复 -->
-                <div id="singlePost_reply_show" v-for="c in comment">
+                <div id="singlePost_reply_show" v-for="c in commentList">
 
                     <img src="./images/广金校徽.webp" alt="">
-                    <div id="singlePost_replyer_Name">{{c.userId}} :</div>
+                    <div id="singlePost_replyer_Name">{{c.username}} :</div>
 
                     <p id="replyer_word">{{c.content}}</p>
                 </div>
@@ -167,7 +167,7 @@
 
 
         <!-- 用户中心 -->
-        <div id="user-center">
+        <div id="user-center" @click="getInfo">
             <h2 class="title">用户中心</h2>
 
             <!-- 头像区域 -->
@@ -398,8 +398,16 @@
     </svg>
 </div>
 
+    <script src="./js/header_right.js"></script>
+<!--    <script src="./js/vue.js"></script>-->
+<script src="./js/big.js"></script>
+<script src="./js/cancel.js"></script>
+<script src="./js/container.js"></script>
 
-<script src="./js/vue.js"></script>
+
+<!--    <script src="./js/left-nav.js"></script>-->
+<!--    <script src="./js/search.js"></script>-->
+<!--    <script src="./js/user-center.js"></script>-->
 
 
 <script src="./js/index.js"></script>

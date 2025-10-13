@@ -1,20 +1,37 @@
 let token = localStorage.getItem('userToken');
 
 new Vue({
-    el: '#post',
+    el: '#content',
     data() {
         return {
             postId: null,
-            post: null,
-            comment: null,
+            postList: null,
+            postInfo: {
+                title: '',
+                subtitle:'',
+                avatarUrl:'',
+                username: '',
+                content: '',
+                createdTime: '',
+                viewsCount:'',
+                commentsCount:'',
+            },
+            commentList: null,
             total: 0,
             loading: false,
             error: null,
             errorDetails: null,
+            searchInfo: '',
+            information: {
+                avatarInput: '',
+                accountInput: '',
+                emailInput: '',
+            }
         }
     },
     created() {
         this.getPostList();
+        this.getInfo();
     },
     methods: {
         getPostList() {
@@ -28,7 +45,7 @@ new Vue({
 
                     // 检查响应状态
                     if (response.data.code === 200) {
-                        this.post = response.data.data.rows;
+                        this.postList = response.data.data.rows;
                         this.total = response.data.data.total;
                     } else {
                         this.error = `服务器返回错误: ${response.data.message || '未知错误'}`;
@@ -50,34 +67,31 @@ new Vue({
                     console.error('请求错误:', err);
                 });
         },
-        // 格式化时间显示
-        formatTime(timeString) {
-            if (!timeString) return '';
-            // 将ISO时间格式转换为本地时间
-            const date = new Date(timeString);
-            return date.toLocaleString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        },
         viewPost(post) {
             this.postId = post.id;
             // 填充帖子详情内容
+            axios
+                .get(`http://8.148.233.225:8081/post/${post.id}`)
+                .then(response => {
+                    console.log('完整响应数据:', response.data);
+                    this.postInfo.title = response.data.data.title;
+                    this.postInfo.subtitle = response.data.data.subtitle;
+                    this.postInfo.avatarUrl = response.data.data.avatarUrl;
+                    this.postInfo.username = response.data.data.username;
+                    this.postInfo.content = response.data.data.content;
+                    this.postInfo.createdTime = response.data.data.createdTime;
+                    this.postInfo.viewsCount = response.data.data.viewsCount;
+                    this.postInfo.commentsCount = response.data.data.commentsCount;
 
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`);
+                });
             document.getElementById('longPost').style.display = 'none';
             document.getElementById('singlePost').style.display = 'block';
-            document.getElementById('singlePost_topic_in').textContent = post.title;
-            document.getElementById('singlePost_user_information_userName').textContent = post.userId;
-            document.getElementById('singlePost_user_information_time').textContent = this.formatTime(post.createdTime);
-            document.getElementById('singlePost_content').textContent = post.content || '暂无内容';
-
             this.getComment(post.id);
         },
         viewBackPostList() {
-            alert("返回帖子列表")
             document.getElementById('longPost').style.display = 'block';
             document.getElementById('singlePost').style.display = 'none';
         },
@@ -86,7 +100,7 @@ new Vue({
                 .get(`http://8.148.233.225:8081/comment/${postId}`)
                 .then(response => {
                     console.log('完整响应数据:', response.data);
-                    this.comment = response.data.data.rows;
+                    this.commentList = response.data.data.rows;
                 })
                 .catch(err => {
                     alert(`请求错误: ${err.response.data.message}`);
@@ -110,16 +124,42 @@ new Vue({
                     alert(`请求错误: ${err.response.data.message}`);
                 });
         },
+        goUserCenter() {
+            alert("进入用户中心");
+            document.getElementById('longPost').style.display = "none";
+            document.getElementById('user-center').style.display = "block";
+        },
+        search() {
+            this.searchInfo = document.getElementById('search').value;
+            axios
+                .get('http://8.148.233.225:8081/post', {
+                    params: {
+                        title: this.searchInfo
+                    }
+                })
+                .then(response => {
+                    this.post = response.data.data.rows;
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`)
+                });
+        },
+        getInfo() {
+            axios
+                .get('http://8.148.233.225:8081/user/me', {
+                    headers: {
+                        'token': token
+                    }
+                })
+                .then(response => {
+                    this.information.avatarInput = response.data.data.avatarUrl;
+                    this.information.accountInput = response.data.data.username;
+                    this.information.emailInput = response.data.data.email;
+                })
+
+        },
 
 
     }
+
 })
-
-
-
-
-
-
-
-
-
