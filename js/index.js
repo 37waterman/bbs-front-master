@@ -344,106 +344,106 @@ inside_suggest_cancel.addEventListener('click', () => {
 // });
 
 
-const editBtn = document.getElementById('editBtn');
-const saveBtn = document.getElementById('saveBtn');
-const cancelBtn = document.getElementById('cancelBtn');
-const infoValues = document.querySelectorAll('.info-value');
-const infoInputs = document.querySelectorAll('.info-input');
-const avatar = document.getElementById('avatar');
-const avatarInput = document.getElementById('avatarInput');
-
-
-
-
-// ---------- 2. 切换“编辑/查看”模式 ----------
-function switchToEditMode() {
-    // 显示输入框、隐藏文本值
-    infoValues.forEach(el => el.style.display = 'none');
-    infoInputs.forEach(el => {
-        if (!el.disabled) { // 非禁用的输入框才显示（如“账号”“收藏数”禁用，不显示）
-            el.style.display = 'block';
-        }
-    });
-    // 切换按钮显示状态
-    editBtn.style.display = 'none';
-    saveBtn.style.display = 'inline-block';
-    cancelBtn.style.display = 'inline-block';
-    // 编辑时暂时禁用头像点击（可选，也可保留上传）
-    avatar.style.cursor = 'default';
-}
-
-function switchToViewMode() {
-    // 隐藏输入框、显示文本值
-    infoInputs.forEach(el => el.style.display = 'none');
-    infoValues.forEach(el => el.style.display = 'block');
-    // 切换按钮显示状态
-    editBtn.style.display = 'inline-block';
-    saveBtn.style.display = 'none';
-    cancelBtn.style.display = 'none';
-    // 恢复头像点击
-    avatar.style.cursor = 'pointer';
-}
-
-// ---------- 3. 保存资料修改 ----------
-async function saveChanges() {
-    // 收集需要提交的修改数据（只包含可编辑字段）
-    const updatedData = {
-        nickname: document.getElementById('nicknameInput').value,
-        college: document.getElementById('collegeInput').value,
-        major: document.getElementById('majorInput').value,
-        hobby: document.getElementById('hobbyInput').value
-        // 账号、收藏数、评论数等不可修改，无需提交
-    };
-
-    try {
-        // 【替换点】实际开发中，将 URL 改为后端“更新用户资料”的接口
-        await axios.put('/api/user/update', updatedData);
-        // 更新成功后，重新拉取用户信息并切回查看模式
-        fetchUserInfo();
-        switchToViewMode();
-        alert('资料修改成功');
-    } catch (error) {
-        console.error('保存资料失败：', error);
-        alert('保存资料失败，请稍后重试');
-    }
-}
-
-//4. 头像上传（可选：需后端支持文件上传）
-avatarInput.addEventListener('change', function (e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-            // 先在前端预览头像
-            avatar.style.backgroundImage = `url(${event.target.result})`;
-            avatar.style.backgroundSize = 'cover';
-            avatar.style.color = 'transparent';
-
-            // 【替换点】实际开发中，用 Axios 把头像文件上传到后端
-            const formData = new FormData();
-            formData.append('avatar', file);
-            axios.post('/api/user/avatar', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data' // 上传文件需指定该头
-                }
-            }).then(response => {
-                alert('头像上传成功');
-            }).catch(error => {
-                console.error('头像上传失败：', error);
-                alert('头像上传失败，请稍后重试');
-            });
-        };
-        reader.readAsDataURL(file); // 读取文件为 Base64 格式
-    }
-});
-
-// ---------- 5. 绑定按钮事件 ----------
-editBtn.addEventListener('click', switchToEditMode);
-saveBtn.addEventListener('click', saveChanges);
-cancelBtn.addEventListener('click', switchToViewMode);
-// 点击头像触发文件选择
-avatar.addEventListener('click', function () {
-    if (editBtn.style.display !== 'none') { // 只有“查看模式”可上传头像
-        avatarInput.click();
-    }
-});
+// const editBtn = document.getElementById('editBtn');
+// const saveBtn = document.getElementById('saveBtn');
+// const cancelBtn = document.getElementById('cancelBtn');
+// const infoValues = document.querySelectorAll('.info-value');
+// const infoInputs = document.querySelectorAll('.info-input');
+// const avatar = document.getElementById('avatar');
+// const avatarInput = document.getElementById('avatarInput');
+//
+//
+//
+//
+// // ---------- 2. 切换“编辑/查看”模式 ----------
+// function switchToEditMode() {
+//     // 显示输入框、隐藏文本值
+//     infoValues.forEach(el => el.style.display = 'none');
+//     infoInputs.forEach(el => {
+//         if (!el.disabled) { // 非禁用的输入框才显示（如“账号”“收藏数”禁用，不显示）
+//             el.style.display = 'block';
+//         }
+//     });
+//     // 切换按钮显示状态
+//     editBtn.style.display = 'none';
+//     saveBtn.style.display = 'inline-block';
+//     cancelBtn.style.display = 'inline-block';
+//     // 编辑时暂时禁用头像点击（可选，也可保留上传）
+//     avatar.style.cursor = 'default';
+// }
+//
+// function switchToViewMode() {
+//     // 隐藏输入框、显示文本值
+//     infoInputs.forEach(el => el.style.display = 'none');
+//     infoValues.forEach(el => el.style.display = 'block');
+//     // 切换按钮显示状态
+//     editBtn.style.display = 'inline-block';
+//     saveBtn.style.display = 'none';
+//     cancelBtn.style.display = 'none';
+//     // 恢复头像点击
+//     avatar.style.cursor = 'pointer';
+// }
+//
+// // ---------- 3. 保存资料修改 ----------
+// async function saveChanges() {
+//     // 收集需要提交的修改数据（只包含可编辑字段）
+//     const updatedData = {
+//         nickname: document.getElementById('nicknameInput').value,
+//         college: document.getElementById('collegeInput').value,
+//         major: document.getElementById('majorInput').value,
+//         hobby: document.getElementById('hobbyInput').value
+//         // 账号、收藏数、评论数等不可修改，无需提交
+//     };
+//
+//     try {
+//         // 【替换点】实际开发中，将 URL 改为后端“更新用户资料”的接口
+//         await axios.put('/api/user/update', updatedData);
+//         // 更新成功后，重新拉取用户信息并切回查看模式
+//         fetchUserInfo();
+//         switchToViewMode();
+//         alert('资料修改成功');
+//     } catch (error) {
+//         console.error('保存资料失败：', error);
+//         alert('保存资料失败，请稍后重试');
+//     }
+// }
+//
+// // //4. 头像上传（可选：需后端支持文件上传）
+// // avatarInput.addEventListener('change', function (e) {
+// //     const file = e.target.files[0];
+// //     if (file) {
+// //         const reader = new FileReader();
+// //         reader.onload = function (event) {
+// //             // 先在前端预览头像
+// //             avatar.style.backgroundImage = `url(${event.target.result})`;
+// //             avatar.style.backgroundSize = 'cover';
+// //             avatar.style.color = 'transparent';
+// //
+// //             // 【替换点】实际开发中，用 Axios 把头像文件上传到后端
+// //             const formData = new FormData();
+// //             formData.append('avatar', file);
+// //             axios.post('/api/user/avatar', formData, {
+// //                 headers: {
+// //                     'Content-Type': 'multipart/form-data' // 上传文件需指定该头
+// //                 }
+// //             }).then(response => {
+// //                 alert('头像上传成功');
+// //             }).catch(error => {
+// //                 console.error('头像上传失败：', error);
+// //                 alert('头像上传失败，请稍后重试');
+// //             });
+// //         };
+// //         reader.readAsDataURL(file); // 读取文件为 Base64 格式
+// //     }
+// // });
+//
+// // ---------- 5. 绑定按钮事件 ----------
+// editBtn.addEventListener('click', switchToEditMode);
+// saveBtn.addEventListener('click', saveChanges);
+// cancelBtn.addEventListener('click', switchToViewMode);
+// // 点击头像触发文件选择
+// avatar.addEventListener('click', function () {
+//     if (editBtn.style.display !== 'none') { // 只有“查看模式”可上传头像
+//         avatarInput.click();
+//     }
+// });

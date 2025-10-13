@@ -156,7 +156,7 @@
                 <!-- 展示所有回复 -->
                 <div id="singlePost_reply_show" v-for="c in commentList">
 
-                    <img src="./images/广金校徽.webp" alt="">
+                    <img :src="c.avatarUrl" alt="">
                     <div id="singlePost_replyer_Name">{{c.username}} :</div>
 
                     <p id="replyer_word">{{c.content}}</p>
@@ -174,8 +174,12 @@
             <div class="avatar-section">
                 <div class="avatar-label">头像</div>
                 <div class="avatar-container">
-                    <div class="avatar" id="avatar">头像</div>
-                    <input type="file" class="avatar-input" id="avatarInput" accept="image/*">
+                    <div class="avatar" id="avatar"
+                         :style="{ backgroundImage: 'url(' + information.avatarInput + ')' }">
+                        头像
+                    </div>
+                    <input type="file" class="avatar-input" id="avatarInput" accept="image/*" @change="uploadAvatar">
+
                 </div>
             </div>
 
@@ -195,25 +199,27 @@
             </div>
 
 
-            <!-- 收藏数（不可编辑，统计字段） -->
-            <div class="info-item">
-                <div class="info-label">收藏数</div>
-                <div class="info-value" id="collectCount">123</div>
-                <input type="number" class="info-input" id="collectCountInput" value="123" disabled>
-            </div>
+            <!--            &lt;!&ndash; 收藏数（不可编辑，统计字段） &ndash;&gt;-->
+            <!--            <div class="info-item">-->
+            <!--                <div class="info-label">收藏数</div>-->
+            <!--                <div class="info-value" id="collectCount">123</div>-->
+            <!--                <input type="number" class="info-input" id="collectCountInput" value="123" disabled>-->
+            <!--            </div>-->
 
-            <!-- 评论数（不可编辑，统计字段） -->
-            <div class="info-item">
-                <div class="info-label">评论数</div>
-                <div class="info-value" id="commentCount">25432</div>
-                <input type="number" class="info-input" id="commentCountInput" value="25432" disabled>
-            </div>
+            <!--            &lt;!&ndash; 评论数（不可编辑，统计字段） &ndash;&gt;-->
+            <!--            <div class="info-item">-->
+            <!--                <div class="info-label">评论数</div>-->
+            <!--                <div class="info-value" id="commentCount">25432</div>-->
+            <!--                <input type="number" class="info-input" id="commentCountInput" value="25432" disabled>-->
+            <!--            </div>-->
 
             <!-- 操作按钮 -->
             <div class="action-buttons">
-                <button class="btn btn-edit" id="editBtn">编辑资料</button>
-                <button class="btn btn-save" id="saveBtn">保存修改</button>
-                <button class="btn btn-cancel" id="cancelBtn">取消</button>
+                <button class="btn btn-edit" id="editBtn" @click="switchToEditMode">编辑资料</button>
+                <button class="btn btn-save" id="saveBtn" @click="updateUserInfo" style="display:none;">保存修改
+                </button>
+                <button class="btn btn-cancel" id="cancelBtn" @click="switchToViewMode" style="display:none;">取消
+                </button>
             </div>
         </div>
 
@@ -398,7 +404,7 @@
     </svg>
 </div>
 
-    <script src="./js/header_right.js"></script>
+<script src="./js/header_right.js"></script>
 <!--    <script src="./js/vue.js"></script>-->
 <script src="./js/big.js"></script>
 <script src="./js/cancel.js"></script>

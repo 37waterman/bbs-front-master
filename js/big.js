@@ -8,13 +8,13 @@ new Vue({
             postList: null,
             postInfo: {
                 title: '',
-                subtitle:'',
-                avatarUrl:'',
+                subtitle: '',
+                avatarUrl: '',
                 username: '',
                 content: '',
                 createdTime: '',
-                viewsCount:'',
-                commentsCount:'',
+                viewsCount: '',
+                commentsCount: '',
             },
             commentList: null,
             total: 0,
@@ -125,7 +125,6 @@ new Vue({
                 });
         },
         goUserCenter() {
-            alert("进入用户中心");
             document.getElementById('longPost').style.display = "none";
             document.getElementById('user-center').style.display = "block";
         },
@@ -156,8 +155,96 @@ new Vue({
                     this.information.accountInput = response.data.data.username;
                     this.information.emailInput = response.data.data.email;
                 })
-
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`)
+                })
+            document.getElementById('avatar').style.backgroundImage = this.information.avatarUrl
+            document.getElementById('avatar').style.backgroundSize = 'cover';
+            document.getElementById('avatar').style.color = 'transparent';
         },
+        uploadAvatar(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // 创建 FormData 对象
+            const formData = new FormData();
+            formData.append('avatar', file);
+
+            // 发送上传请求
+            axios.post('http://8.148.233.225:8081/user/updateAvatar', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'token': token
+                }
+            })
+                .then(response => {
+                    if (response.data.code === 204) {
+                        // 更新头像显示
+                        this.information.avatarInput = response.data.data.avatarUrl;
+                        alert('头像上传成功');
+                    } else {
+                        alert(`上传失败: ${response.data.message}`);
+                    }
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message || '上传失败'}`);
+                });
+        },
+
+// 更新用户信息方法
+        updateUserInfo() {
+            // 获取用户输入的信息
+            const updatedData = {
+                username: document.getElementById('accountInput').value,
+                email: document.getElementById('emailInput').value
+            };
+
+            // 发送更新请求
+            axios
+                .post('http://8.148.233.225:8081/user/updateInfo', updatedData, {
+                    headers: {
+                        'token': token
+                    }
+                })
+                .then(response => {
+                    if (response.data.data.code === 204) {
+                        // 更新成功后更新本地数据
+                        this.information.emailInput = updatedData.email;
+
+                    } else {
+                        alert(`更新失败: ${response.data.message}`);
+                    }
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message || '更新失败'}`);
+                });
+            alert('信息更新成功');
+            this.switchToViewMode();
+        },
+
+// 切换到编辑模式
+        switchToEditMode() {
+            // 隐藏文本值，显示输入框
+            document.querySelectorAll('.info-value').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.info-input').forEach(el => el.style.display = 'block');
+
+            // 切换按钮显示
+            document.getElementById('editBtn').style.display = 'none';
+            document.getElementById('saveBtn').style.display = 'inline-block';
+            document.getElementById('cancelBtn').style.display = 'inline-block';
+        },
+
+// 切换到查看模式
+        switchToViewMode() {
+            // 隐藏输入框，显示文本值
+            document.querySelectorAll('.info-input').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.info-value').forEach(el => el.style.display = 'block');
+
+            // 切换按钮显示
+            document.getElementById('editBtn').style.display = 'inline-block';
+            document.getElementById('saveBtn').style.display = 'none';
+            document.getElementById('cancelBtn').style.display = 'none';
+        }
 
 
     }
