@@ -6,6 +6,7 @@ new Vue({
         return {
             postId: null,
             postList: null,
+            hotPostList: null,
             postInfo: {
                 title: '',
                 subtitle: '',
@@ -35,8 +36,6 @@ new Vue({
     },
     methods: {
         getPostList() {
-            this.loading = true;
-            this.error = null;
 
             axios
                 .get('http://8.148.233.225:8081/post')
@@ -94,6 +93,8 @@ new Vue({
         viewBackPostList() {
             document.getElementById('longPost').style.display = 'block';
             document.getElementById('singlePost').style.display = 'none';
+            document.getElementById('user-center').style.display = 'none';
+            document.getElementById('topic').textContent = '今日主题';
         },
         getComment(postId) {
             axios
@@ -128,16 +129,19 @@ new Vue({
             document.getElementById('longPost').style.display = "none";
             document.getElementById('user-center').style.display = "block";
         },
-        search() {
+        search(boardId) {
+            this.viewBackPostList()
             this.searchInfo = document.getElementById('search').value;
             axios
                 .get('http://8.148.233.225:8081/post', {
                     params: {
-                        title: this.searchInfo
+                        title: this.searchInfo,
+                        boardId: (parseInt(boardId, 10) ? parseInt(boardId) : null)
                     }
                 })
                 .then(response => {
-                    this.post = response.data.data.rows;
+                    this.postList = response.data.data.rows;
+                    this.total = response.data.data.total;
                 })
                 .catch(err => {
                     alert(`请求错误: ${err.response.data.message}`)
@@ -162,36 +166,105 @@ new Vue({
             document.getElementById('avatar').style.backgroundSize = 'cover';
             document.getElementById('avatar').style.color = 'transparent';
         },
-        uploadAvatar(event) {
+        goMyFavorite() {
+            axios
+                .get('http://8.148.233.225:8081/user/favourites', {
+                    headers: {
+                        'token': token
+                    }
+                })
+                .then(response => {
+                    this.postList = response.data.data.rows;
+                    this.total = response.data.data.total;
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`)
+                });
+
+            this.viewBackPostList();
+            document.getElementById('topic').textContent = '我的收藏';
+        },
+        goMyPost() {
+            axios
+                .get('http://8.148.233.225:8081/user/posts', {
+                    headers: {
+                        'token': token
+                    }
+                })
+                .then(response => {
+                    this.postList = response.data.data.rows;
+                    this.total = response.data.data.total;
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`)
+                });
+
+            this.viewBackPostList();
+            document.getElementById('topic').textContent = '我的帖子';
+        },
+
+        updateAvatar(event) {
             const file = event.target.files[0];
             if (!file) return;
 
+            // 文件类型验证
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('只允许上传 JPG、PNG、GIF、WEBP 格式的图片');
+                return;
+            }
+
+            // 文件大小验证（限制为5MB）
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert('图片大小不能超过 5MB');
+                return;
+            }
+
             // 创建 FormData 对象
             const formData = new FormData();
-            formData.append('avatar', file);
+            formData.append('file', file);
 
             // 发送上传请求
             axios.post('http://8.148.233.225:8081/user/updateAvatar', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'token': token
+                    'token': token,
+                    'Content-Type': 'multipart/form-data'
                 }
             })
                 .then(response => {
-                    if (response.data.code === 204) {
+                    if (response.data.code === 200) {
                         // 更新头像显示
-                        this.information.avatarInput = response.data.data.avatarUrl;
+                        this.information.avatarInput = response.data.data;
+                        document.getElementById('avatar').style.backgroundImage = `url(${response.data.data})`;
+                        document.getElementById('avatar').style.backgroundSize = 'cover';
+                        document.getElementById('avatar').style.color = 'transparent';
+                        document.getElementById('avatar').textContent = ''; // 清空文字
                         alert('头像上传成功');
                     } else {
                         alert(`上传失败: ${response.data.message}`);
+                        document.getElementById('avatar').textContent = originalText;
                     }
                 })
                 .catch(err => {
-                    alert(`请求错误: ${err.response.data.message || '上传失败'}`);
+                    alert(`请求错误: ${err.response?.data?.message || '上传失败'}`);
+                    document.getElementById('avatar').textContent = originalText;
                 });
         },
 
-// 更新用户信息方法
+        // getHotPostList(){
+        //     axios
+        //         .get('http://8.148.233.225:8081/post/hot')
+        //         .then(response => {
+        //             console.log('完整响应数据:', response.data);
+        //             this.hotPostList = response.data.data.rows;
+        //         })
+        //         .catch(err => {
+        //             alert(`请求错误: ${err.response.data.message}`)
+        //         });
+        // },
+
+
         updateUserInfo() {
             // 获取用户输入的信息
             const updatedData = {
@@ -222,7 +295,6 @@ new Vue({
             this.switchToViewMode();
         },
 
-// 切换到编辑模式
         switchToEditMode() {
             // 隐藏文本值，显示输入框
             document.querySelectorAll('.info-value').forEach(el => el.style.display = 'none');
@@ -234,7 +306,6 @@ new Vue({
             document.getElementById('cancelBtn').style.display = 'inline-block';
         },
 
-// 切换到查看模式
         switchToViewMode() {
             // 隐藏输入框，显示文本值
             document.querySelectorAll('.info-input').forEach(el => el.style.display = 'none');

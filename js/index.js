@@ -68,7 +68,7 @@ window.addEventListener('resize', calculateMiddleWidth);
 const help = document.querySelector('#help')
 const inside_help = document.querySelector('#inside_help')
 const inside_help_cancel = document.querySelector('#inside_help_cancel')
-
+const screen = document.querySelector('#screen');
 const suggest = document.querySelector('#suggest')
 const inside_suggest = document.querySelector('#inside_suggest')
 const inside_suggest_cancel = document.querySelector('#inside_suggest_cancel')
