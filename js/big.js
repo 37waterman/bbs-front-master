@@ -30,13 +30,39 @@ new Vue({
             }
         }
     },
+    mounted() {
+        // 组件挂载后计算宽度
+        this.calculateMiddleWidth();
+        // 添加窗口大小变化监听
+        window.addEventListener('resize', this.calculateMiddleWidth);
+    },
+    beforeDestroy() {
+        // 清理事件监听器
+        window.removeEventListener('resize', this.calculateMiddleWidth);
+    },
     created() {
+        this.getHotPostList();
         this.getPostList();
-        this.getInfo();
     },
     methods: {
-        getPostList() {
+        calculateMiddleWidth() {
+            const leftNav = document.querySelector('.content .left_nav');
+            const rightTopicArea = document.querySelector('.content .right_topic_area');
+            const middleContent = document.querySelector('.content .middle_content');
 
+            if (leftNav && rightTopicArea && middleContent) {
+                const leftWidth = parseFloat(getComputedStyle(leftNav).width);
+                const rightWidth = parseFloat(getComputedStyle(rightTopicArea).width);
+                const middleWidth = window.innerWidth - leftWidth - rightWidth;
+                middleContent.style.width = `${middleWidth}px`;
+            }
+        },
+        homePage() {
+            document.getElementById('topic').textContent = '今日主题';
+            this.getPostList()
+            this.viewBackPostList()
+        },
+        getPostList() {
             axios
                 .get('http://8.148.233.225:8081/post')
                 .then(response => {
@@ -94,7 +120,34 @@ new Vue({
             document.getElementById('longPost').style.display = 'block';
             document.getElementById('singlePost').style.display = 'none';
             document.getElementById('user-center').style.display = 'none';
-            document.getElementById('topic').textContent = '今日主题';
+            document.getElementById('addPost').style.display = 'none';
+        },
+        goAddPostPage() {
+            document.getElementById('longPost').style.display = "none";
+            document.getElementById('addPost').style.display = "flex";
+        },
+        addPost() {
+            const addPostInfo = {
+                title: document.getElementById('title-input').value,
+                subtitle: document.getElementById('subtitle-input').value,
+                content: document.getElementById('post-content').value,
+                boardId: parseInt(1)
+            }
+            axios
+                .post('http://8.148.233.225:8081/post', addPostInfo, {
+                        headers: {
+                            'token': token
+                        }
+                    }
+                )
+                .then(response => {
+                    alert('发布成功');
+                    this.viewBackPostList();
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`);
+                });
+            this.viewBackPostList();
         },
         getComment(postId) {
             axios
@@ -126,12 +179,17 @@ new Vue({
                 });
         },
         goUserCenter() {
+            this.getInfo();
             document.getElementById('longPost').style.display = "none";
             document.getElementById('user-center').style.display = "block";
+            document.getElementById('singlePost').style.display = "none";
+            document.getElementById('addPost').style.display = "none";
+
         },
         search(boardId) {
             this.viewBackPostList()
             this.searchInfo = document.getElementById('search').value;
+            document.getElementById('search').value = '';
             axios
                 .get('http://8.148.233.225:8081/post', {
                     params: {
@@ -146,6 +204,19 @@ new Vue({
                 .catch(err => {
                     alert(`请求错误: ${err.response.data.message}`)
                 });
+            switch (boardId) {
+                case 1:
+                    document.getElementById('topic').textContent = '校园生活';
+                    break;
+                case 2:
+                    document.getElementById('topic').textContent = '互帮互助';
+                    break;
+                case 3:
+                    document.getElementById('topic').textContent = '学术探讨';
+                    break;
+                default:
+                    document.getElementById('topic').textContent = '搜索结果';
+            }
         },
         getInfo() {
             axios
@@ -167,6 +238,7 @@ new Vue({
             document.getElementById('avatar').style.color = 'transparent';
         },
         goMyFavorite() {
+            this.postList = null;
             axios
                 .get('http://8.148.233.225:8081/user/favourites', {
                     headers: {
@@ -185,6 +257,7 @@ new Vue({
             document.getElementById('topic').textContent = '我的收藏';
         },
         goMyPost() {
+            this.postList = null;
             axios
                 .get('http://8.148.233.225:8081/user/posts', {
                     headers: {
@@ -201,6 +274,45 @@ new Vue({
 
             this.viewBackPostList();
             document.getElementById('topic').textContent = '我的帖子';
+        },
+        addFavourite() {
+            const formData = new FormData();
+            formData.append('postId', this.postId);
+            axios
+                .post('http://8.148.233.225:8081/user/favourite', formData,
+                    {
+                        headers: {
+                            'token': token
+                        }
+                    }
+                )
+                .then(response => {
+                    alert('收藏成功');
+                    document.getElementById('favourite').style.display = "none";
+                    document.getElementById('removeFavourite').style.display = " inline-block";
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`)
+                });
+        },
+        removeFavourite() {
+            const formData = new FormData();
+            formData.append('postId', this.postId);
+            axios
+                .delete('http://8.148.233.225:8081/user/favourite', {
+                    data: formData,
+
+                    headers: {
+                        'token': token
+                    }
+
+                })
+                .then(response => {
+                    alert('取消收藏成功');
+                    document.getElementById('favourite').style.display = " inline-block";
+                    document.getElementById('removeFavourite').style.display = "none";
+                })
+
         },
 
         updateAvatar(event) {
@@ -252,17 +364,17 @@ new Vue({
                 });
         },
 
-        // getHotPostList(){
-        //     axios
-        //         .get('http://8.148.233.225:8081/post/hot')
-        //         .then(response => {
-        //             console.log('完整响应数据:', response.data);
-        //             this.hotPostList = response.data.data.rows;
-        //         })
-        //         .catch(err => {
-        //             alert(`请求错误: ${err.response.data.message}`)
-        //         });
-        // },
+        getHotPostList(){
+            axios
+                .get('http://8.148.233.225:8081/post/hot')
+                .then(response => {
+                    console.log('完整响应数据:', response.data);
+                    this.hotPostList = response.data.data.rows;
+                })
+                .catch(err => {
+
+                });
+        },
 
 
         updateUserInfo() {
@@ -293,6 +405,11 @@ new Vue({
                 });
             alert('信息更新成功');
             this.switchToViewMode();
+        },
+        logout() {
+            localStorage.clear();
+            document.getElementById('goLogin').style.display = "block";
+            this.viewBackPostList();
         },
 
         switchToEditMode() {

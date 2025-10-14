@@ -36,6 +36,7 @@ new Vue({
                 });
         },
         Login() {
+
             this.loginInfo.username = document.getElementById('userName').value;
             this.loginInfo.password = document.getElementById('password').value;
             axios
@@ -44,6 +45,7 @@ new Vue({
                     alert('登录成功')
                     token = response.data.data;
                     localStorage.setItem('userToken', token);
+                    document.getElementById('goLogin').style.display = "none";
                     alert(token);
                     document.getElementById('container').style.display = "none";
                     document.getElementById('cancel').style.display = "none";
@@ -53,6 +55,6 @@ new Vue({
                     alert(`请求错误: ${err.response.data.message}`);
 
                 });
-        }
+        },
     }
 })

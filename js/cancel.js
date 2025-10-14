@@ -12,6 +12,8 @@ new Vue({
             document.getElementById('container').style.display = "none";
             document.getElementById('cancel').style.display = "none";
             document.getElementById('screen').style.display = "none";
+            document.getElementById('inside_help').style.display = "none";
+            document.getElementById('inside_suggest').style.display = "none";
         },
 
     }

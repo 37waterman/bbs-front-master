@@ -2,21 +2,21 @@
 
 
 // 1. 获取DOM元素
-const leftNav = document.querySelector('.content .left_nav');
-const rightTopicArea = document.querySelector('.content .right_topic_area');
-const middleContent = document.querySelector('.content .middle_content');
-
-// 2. 计算并设置中间宽度的函数
-function calculateMiddleWidth() {
-    const leftWidth = parseFloat(getComputedStyle(leftNav).width);
-    const rightWidth = parseFloat(getComputedStyle(rightTopicArea).width);
-    const middleWidth = window.innerWidth - leftWidth - rightWidth;
-    middleContent.style.width = `${middleWidth}px`;
-}
-
-// 3. 绑定事件，确保响应式
-window.addEventListener('load', calculateMiddleWidth);
-window.addEventListener('resize', calculateMiddleWidth);
+// const leftNav = document.querySelector('.content .left_nav');
+// const rightTopicArea = document.querySelector('.content .right_topic_area');
+// const middleContent = document.querySelector('.content .middle_content');
+//
+// // 2. 计算并设置中间宽度的函数
+// function calculateMiddleWidth() {
+//     const leftWidth = parseFloat(getComputedStyle(leftNav).width);
+//     const rightWidth = parseFloat(getComputedStyle(rightTopicArea).width);
+//     const middleWidth = window.innerWidth - leftWidth - rightWidth;
+//     middleContent.style.width = `${middleWidth}px`;
+// }
+//
+// // 3. 绑定事件，确保响应式
+// window.addEventListener('load', calculateMiddleWidth);
+// window.addEventListener('resize', calculateMiddleWidth);
 
 
 
@@ -65,36 +65,36 @@ window.addEventListener('resize', calculateMiddleWidth);
 
 
 // 帮助和建议
-const help = document.querySelector('#help')
-const inside_help = document.querySelector('#inside_help')
-const inside_help_cancel = document.querySelector('#inside_help_cancel')
-const screen = document.querySelector('#screen');
-const suggest = document.querySelector('#suggest')
-const inside_suggest = document.querySelector('#inside_suggest')
-const inside_suggest_cancel = document.querySelector('#inside_suggest_cancel')
+// const help = document.querySelector('#help')
+// const inside_help = document.querySelector('#inside_help')
+// const inside_help_cancel = document.querySelector('#inside_help_cancel')
+// const screen = document.querySelector('#screen');
+// const suggest = document.querySelector('#suggest')
+// const inside_suggest = document.querySelector('#inside_suggest')
+// const inside_suggest_cancel = document.querySelector('#inside_suggest_cancel')
 
 
-help.addEventListener('click', () => {
-    inside_help.style.display = "block";
-    inside_help_cancel.style.display = "block";
-    screen.style.display = "block";
-})
-inside_help_cancel.addEventListener('click', () => {
-    inside_help.style.display = "none";
-    inside_help_cancel.style.display = "none";
-    screen.style.display = "none";
-})
+// help.addEventListener('click', () => {
+//     inside_help.style.display = "block";
+//     inside_help_cancel.style.display = "block";
+//     screen.style.display = "block";
+// })
+// inside_help_cancel.addEventListener('click', () => {
+//     inside_help.style.display = "none";
+//     inside_help_cancel.style.display = "none";
+//     screen.style.display = "none";
+// })
 
-suggest.addEventListener('click', () => {
-    inside_suggest.style.display = "block";
-    inside_suggest_cancel.style.display = "block";
-    screen.style.display = "block";
-})
-inside_suggest_cancel.addEventListener('click', () => {
-    inside_suggest.style.display = "none";
-    inside_suggest_cancel.style.display = "none";
-    screen.style.display = "none";
-})
+// suggest.addEventListener('click', () => {
+//     inside_suggest.style.display = "block";
+//     inside_suggest_cancel.style.display = "block";
+//     screen.style.display = "block";
+// })
+// inside_suggest_cancel.addEventListener('click', () => {
+//     inside_suggest.style.display = "none";
+//     inside_suggest_cancel.style.display = "none";
+//     screen.style.display = "none";
+// })
 
 
 
