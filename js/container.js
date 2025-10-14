@@ -46,7 +46,6 @@ new Vue({
                     token = response.data.data;
                     localStorage.setItem('userToken', token);
                     document.getElementById('goLogin').style.display = "none";
-                    alert(token);
                     document.getElementById('container').style.display = "none";
                     document.getElementById('cancel').style.display = "none";
                     document.getElementById('screen').style.display = "none";

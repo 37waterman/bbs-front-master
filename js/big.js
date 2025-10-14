@@ -94,7 +94,7 @@ new Vue({
         },
         viewPost(post) {
             this.postId = post.id;
-            // 填充帖子详情内容
+            this.isFavourite()
             axios
                 .get(`http://8.148.233.225:8081/post/${post.id}`)
                 .then(response => {
@@ -112,8 +112,11 @@ new Vue({
                 .catch(err => {
                     alert(`请求错误: ${err.response.data.message}`);
                 });
+
             document.getElementById('longPost').style.display = 'none';
             document.getElementById('singlePost').style.display = 'block';
+            document.getElementById('user-center').style.display = 'none';
+            document.getElementById('addPost').style.display = 'none';
             this.getComment(post.id);
         },
         viewBackPostList() {
@@ -127,11 +130,15 @@ new Vue({
             document.getElementById('addPost').style.display = "flex";
         },
         addPost() {
+            if (!token) {
+                alert('请登录');
+                return;
+            }
             const addPostInfo = {
                 title: document.getElementById('title-input').value,
                 subtitle: document.getElementById('subtitle-input').value,
                 content: document.getElementById('post-content').value,
-                boardId: parseInt(1)
+                boardId: document.getElementById('post-section').value
             }
             axios
                 .post('http://8.148.233.225:8081/post', addPostInfo, {
@@ -161,6 +168,10 @@ new Vue({
                 });
         },
         addComment() {
+            if (!token) {
+                alert('请登录');
+                return;
+            }
             axios
                 .post(`http://8.148.233.225:8081/comment/${this.postId}`, {
                         content: document.getElementById('reply-content').value
@@ -177,6 +188,7 @@ new Vue({
                 .catch(err => {
                     alert(`请求错误: ${err.response.data.message}`);
                 });
+            document.getElementById('reply-content').value = '';
         },
         goUserCenter() {
             this.getInfo();
@@ -184,6 +196,9 @@ new Vue({
             document.getElementById('user-center').style.display = "block";
             document.getElementById('singlePost').style.display = "none";
             document.getElementById('addPost').style.display = "none";
+            if (!token) {
+                document.getElementById('actionButtons').style.display = "none";
+            }
 
         },
         search(boardId) {
@@ -219,6 +234,10 @@ new Vue({
             }
         },
         getInfo() {
+            if (!token) {
+                alert('请登录');
+                return;
+            }
             axios
                 .get('http://8.148.233.225:8081/user/me', {
                     headers: {
@@ -238,6 +257,10 @@ new Vue({
             document.getElementById('avatar').style.color = 'transparent';
         },
         goMyFavorite() {
+            if (!token) {
+                alert('请登录');
+                return;
+            }
             this.postList = null;
             axios
                 .get('http://8.148.233.225:8081/user/favourites', {
@@ -257,6 +280,10 @@ new Vue({
             document.getElementById('topic').textContent = '我的收藏';
         },
         goMyPost() {
+            if (!token) {
+                alert('请登录');
+                return;
+            }
             this.postList = null;
             axios
                 .get('http://8.148.233.225:8081/user/posts', {
@@ -275,7 +302,32 @@ new Vue({
             this.viewBackPostList();
             document.getElementById('topic').textContent = '我的帖子';
         },
+        isFavourite() {
+            axios
+                .get('http://8.148.233.225:8081/user/checkFavourite', {
+                    params: {
+                        postId: this.postId
+                    },
+                    headers: {
+                        'token': token
+                    }
+                })
+                .then(response => {
+                    if (response.data.data === true) {
+                        document.getElementById('favourite').style.display = "none";
+                        document.getElementById('removeFavourite').style.display = " inline-block";
+                    } else {
+                        document.getElementById('favourite').style.display = " inline-block";
+                        document.getElementById('removeFavourite').style.display = "none";
+                    }
+
+                })
+        },
         addFavourite() {
+            if (!token) {
+                alert('请登录');
+                return;
+            }
             const formData = new FormData();
             formData.append('postId', this.postId);
             axios
@@ -296,6 +348,10 @@ new Vue({
                 });
         },
         removeFavourite() {
+            if (!token) {
+                alert('请登录');
+                return;
+            }
             const formData = new FormData();
             formData.append('postId', this.postId);
             axios
@@ -316,6 +372,10 @@ new Vue({
         },
 
         updateAvatar(event) {
+            if (!token) {
+                alert('请登录');
+                return;
+            }
             const file = event.target.files[0];
             if (!file) return;
 
@@ -364,7 +424,7 @@ new Vue({
                 });
         },
 
-        getHotPostList(){
+        getHotPostList() {
             axios
                 .get('http://8.148.233.225:8081/post/hot')
                 .then(response => {
@@ -378,13 +438,11 @@ new Vue({
 
 
         updateUserInfo() {
-            // 获取用户输入的信息
             const updatedData = {
                 username: document.getElementById('accountInput').value,
                 email: document.getElementById('emailInput').value
             };
 
-            // 发送更新请求
             axios
                 .post('http://8.148.233.225:8081/user/updateInfo', updatedData, {
                     headers: {
@@ -393,7 +451,6 @@ new Vue({
                 })
                 .then(response => {
                     if (response.data.data.code === 204) {
-                        // 更新成功后更新本地数据
                         this.information.emailInput = updatedData.email;
 
                     } else {
