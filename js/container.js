@@ -55,5 +55,15 @@ new Vue({
 
                 });
         },
+        goForgetPassword() {
+            document.getElementById('forget').style.display = "block";
+            document.getElementById('remember').style.display = "none";
+
+
+        },
+        goBack(){
+            document.getElementById('forget').style.display = "none";
+            document.getElementById('remember').style.display = "block";
+        }
     }
 })

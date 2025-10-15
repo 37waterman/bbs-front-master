@@ -17,6 +17,8 @@ new Vue({
             document.getElementById('container').style.display = "block";
             document.querySelector('.cancel').style.display = "block";
             document.getElementById('screen').style.display = "block";
+            document.getElementById('remember').style.display = "block";
+            document.getElementById('forget').style.display = "none";
         },
         goHomePage() {
             document.getElementById('longPost').style.display = "block";

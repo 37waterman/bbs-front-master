@@ -38,9 +38,9 @@
 <div class="content" id="content">
     <div class="left_nav" id="left_nav">
         <h2>导航</h2>
-        <a href="#">首页</a>
+        <a href="#" style="color: #ffffff;font-weight: 700" @click="homePage">首页</a>
         <ul>
-<!--            <li><a href="#">校内事务</a></li>-->
+            <!--            <li><a href="#">校内事务</a></li>-->
             <li><a href="#" @click="search(1)">校园生活</a></li>
             <li><a href="#" @click="search(2)">互帮互助</a></li>
             <li><a href="#" @click="search(3)">学术探讨</a></li>
@@ -76,7 +76,9 @@
         <div id="post">
             <ul id="longPost">
                 <h2 class="todayTopic" id="topic">今日主题</h2>
-                <button id="addP" @click="goAddPostPage">更多</button>
+                <div style="text-align: right;" id="addPP">
+                    <button id="addP" @click="goAddPostPage">我要发帖</button>
+                </div>
 
                 <li v-for="p in postList">
                     <hr>
@@ -118,11 +120,13 @@
 
                     </svg>
                 </div>
-                <div id="singlePost_topic_in">{{postInfo.title}}</div>
+                <div id="singlePost_topic_in" style="color: #ea4646">{{postInfo.title}}</div>
+                <div id="singlePost_subTopic_in">&nbsp&nbsp&nbsp&nbsp{{postInfo.subtitle}}</div>
                 <div id="every_bottom">
                     <div>
+
                         <p id="favourite" @click="addFavourite">
-                            <svg class="icon" width="30px" height="30px" viewBox="0 0 1025 1024" version="1.1"
+                            <svg class="icon" width="20px" height="20px" viewBox="0 0 1025 1024" version="1.1"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path d="M512.118374 131.072L603.766374 317.44c20.48 41.472 59.392 70.144 104.96 76.8l205.824 30.208-148.992 145.92c-32.768 32.256-47.616 78.336-39.936 123.392l35.328 205.824-183.296-96.768c-19.968-10.752-42.496-16.384-65.024-16.384-22.528 0-45.056 5.632-65.024 16.384l-183.296 96.768 35.328-205.824c7.68-45.056-7.168-91.136-39.936-123.392L109.686374 424.448 314.998374 394.24c45.568-6.656 84.992-35.328 104.96-76.8l92.16-186.368m0-112.64c-20.48 0-41.472 10.752-51.712 32.256L346.742374 281.6c-8.192 16.896-24.576 29.184-43.52 31.744L49.270374 350.208C2.166374 357.376-16.777626 415.232 17.526374 449.024l183.808 180.224c13.312 13.312 19.968 32.256 16.384 51.2l-43.52 253.952c-6.144 37.376 23.552 67.584 56.832 67.584 8.704 0 17.92-2.048 27.136-6.656L484.982374 875.52c8.192-4.608 17.92-6.656 27.136-6.656 9.216 0 18.432 2.048 27.136 6.656l226.816 119.808c8.704 4.608 17.92 6.656 27.136 6.656 33.792 0 63.488-30.208 56.832-67.584l-43.52-253.952c-3.072-18.944 3.072-37.888 16.384-51.2l183.808-180.224c34.304-33.28 15.36-91.648-32.256-98.304l-253.952-36.864c-18.944-2.56-35.328-14.848-43.52-31.744L563.830374 50.688c-10.752-21.504-31.232-32.256-51.712-32.256z"/>
                             </svg>
@@ -151,8 +155,10 @@
                                     fill="#333333"/>
                         </svg>
                         <span>评论数&nbsp&nbsp&nbsp{{postInfo.commentsCount}}</span>
+                        <button type="button" id="cancel_myPost">删除帖子</button>
                     </div>
                 </div>
+                <br>
                 <hr>
                 <div id="singlePost_user_information">
                     <img alt="" :src="postInfo.userUrl">
@@ -257,7 +263,7 @@
             <!--            </div>-->
 
             <!-- 操作按钮 -->
-            <div class="action-buttons" id ="actionButtons">
+            <div class="action-buttons" id="actionButtons">
                 <button class="btn btn-edit" id="editBtn" @click="switchToEditMode">编辑资料</button>
                 <button class="btn btn-save" id="saveBtn" @click="updateUserInfo" style="display:none;">保存修改
                 </button>
@@ -285,46 +291,64 @@
 <!-- 注册登录 -->
 <div class="container" id="container">
 
+    <div id="remember" style="display: block">
+        <div class="form_container sign_up_container">
+            <!-- 注册 -->
+            <form action="#">
+                <h1>用户注册</h1>
+                <input type="text" id="registerUsername" placeholder="用户名">
+                <input type="password" id="registerPassword" placeholder="密码">
+                <input type="text" id="userEmail" placeholder="邮箱">
+                <button id="register" type="button" @click="Register">注册</button>
+            </form>
+        </div>
 
-    <div class="form_container sign_up_container">
-        <!-- 注册 -->
-        <form action="#">
-            <h1>用户注册</h1>
-            <input type="text" id="registerUsername" placeholder="用户名">
-            <input type="password" id="registerPassword" placeholder="密码">
-            <input type="text" id="userEmail" placeholder="邮箱">
-            <button id="register" type="button" @click="Register">注册</button>
-        </form>
-    </div>
+        <div class="form_container sign_in_container">
+            <!-- 登录 -->
+            <form action="#">
+                <h1>用户登录</h1>
+                <input type="text" id="userName" placeholder="用户名">
+                <input type="password" id="password" placeholder="密码">
+                <a href="#" @click="goForgetPassword">忘记密码?</a>
+                <button id="login" type="button" @click="Login">登录</button>
+            </form>
+        </div>
 
-    <div class="form_container sign_in_container">
-        <!-- 登录 -->
-        <form action="#">
-            <h1>用户登录</h1>
-            <input type="text" id="userName" placeholder="用户名">
-            <input type="password" id="password" placeholder="密码">
-            <a href="#">忘记密码?</a>
-            <button id="login" type="button" @click="Login">登录</button>
-        </form>
-    </div>
+        <!-- 侧边栏内容 -->
+        <div class="overlay_container">
+            <div class="overlay">
+                <div class="overlay_panner overlay_left">
+                    <h1>已有账号？</h1>
+                    <p>点击按钮以登录</p>
+                    <button class="ghost" id="signIn " @click="goLogin">登录</button>
+                </div>
 
-    <!-- 侧边栏内容 -->
-    <div class="overlay_container">
-        <div class="overlay">
-            <div class="overlay_panner overlay_left">
-                <h1>已有账号？</h1>
-                <p>点击按钮以登录</p>
-                <button class="ghost" id="signIn " @click="goLogin">登录</button>
-            </div>
-
-            <div class="overlay_panner overlay_right">
-                <h1>没有账号？</h1>
-                <p>点击去注册一个属于你账号吧</p>
-                <button class="ghost" id="signUp" @click="goRegister">注册</button>
+                <div class="overlay_panner overlay_right">
+                    <h1>没有账号？</h1>
+                    <p>点击去注册一个属于你账号吧</p>
+                    <button class="ghost" id="signUp" @click="goRegister">注册</button>
+                </div>
             </div>
         </div>
     </div>
 
+    <!--忘记密码-->
+    <div id="forget" style="display: none">
+        <div class="form_container forget_password_container">
+        <form action="#">
+            <h1>找回密码</h1>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                请输入您的注册邮箱
+            </p>
+            <input type="text" class="forget_password_button" placeholder="用户名" style="width: 50%">
+            <input type="email" id="forgetEmail" placeholder="邮箱地址" style="width: 50%" required>
+            <input type="text" class="forget_password_button" placeholder="新密码" style="width: 50%">
+            <div style="margin-top: 1rem;">
+                <a href="#" @click="goBack" style="font-size: 0.8rem; color: #ea4646;">返回登录</a>
+            </div>
+        </form>
+    </div>
+    </div>
 
 </div>
 <div class="cancel" id="cancel" @click="cancel">
