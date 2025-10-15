@@ -118,6 +118,7 @@ new Vue({
             document.getElementById('user-center').style.display = 'none';
             document.getElementById('addPost').style.display = 'none';
             this.getComment(post.id);
+            this.isMyPost(post.id);
         },
         viewBackPostList() {
             document.getElementById('longPost').style.display = 'block';
@@ -149,11 +150,13 @@ new Vue({
                 )
                 .then(response => {
                     alert('发布成功');
+                    this.getPostList();
                     this.viewBackPostList();
                 })
                 .catch(err => {
                     alert(`请求错误: ${err.response.data.message}`);
                 });
+            this.getPostList();
             this.viewBackPostList();
         },
         getComment(postId) {
@@ -322,6 +325,40 @@ new Vue({
                     }
 
                 })
+        },
+        isMyPost() {
+            axios
+                .get('http://8.148.233.225:8081/user/checkPost', {
+                    params: {
+                        postId: this.postId
+                    },
+                    headers: {
+                        'token': token
+                    }
+                })
+                .then(response => {
+                    if (response.data.data === true) {
+                        document.getElementById('cancel_myPost').style.display = "inline-block";
+                    } else {
+                        document.getElementById('cancel_myPost').style.display = " none";
+                    }
+                })
+            document.getElementById('cancel_myPost').style.display = " none";
+        },
+        removePost() {
+            axios
+                .delete(`http://8.148.233.225:8081/post/${this.postId}`, {
+                    headers: {
+                        'token': token
+                    }
+                })
+                .then(response => {
+                    alert('删除成功');
+                    this.viewBackPostList();
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`)
+                });
         },
         addFavourite() {
             if (!token) {
