@@ -152,10 +152,18 @@ new Vue({
                     alert('发布成功');
                     this.getPostList();
                     this.viewBackPostList();
+                    document.getElementById('title-input').value = '';
+                    document.getElementById('subtitle-input').value = '';
+                    document.getElementById('post-content').value = '';
+                    document.getElementById('post-section').value = '';
                 })
                 .catch(err => {
                     alert(`请求错误: ${err.response.data.message}`);
                 });
+            document.getElementById('title-input').value = '';
+            document.getElementById('subtitle-input').value = '';
+            document.getElementById('post-content').value = '';
+            document.getElementById('post-section').value = '';
             this.getPostList();
             this.viewBackPostList();
         },
