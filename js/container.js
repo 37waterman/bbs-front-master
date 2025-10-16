@@ -61,9 +61,35 @@ new Vue({
 
 
         },
-        goBack(){
+        goBack() {
             document.getElementById('forget').style.display = "none";
             document.getElementById('remember').style.display = "block";
+        },
+        forgetPassword() {
+            let username = document.getElementById('forgetUsername').value;
+            let email = document.getElementById('forgetEmail').value;
+            let password = document.getElementById('forgetPassword').value;
+            axios
+                .post('http://8.148.233.225:8081/user/updatePassword', {
+                    username: username,
+                    email: email,
+                    password: password
+                })
+                .then(response => {
+                    alert('修改成功 请返回登录')
+                    this.goBack();
+                    document.getElementById('forgetUsername').value = '';
+                    document.getElementById('forgetEmail').value = '';
+                    document.getElementById('forgetPassword').value = '';
+                })
+                .catch(err => {
+                    alert(`请求错误: ${err.response.data.message}`);
+
+                });
+            document.getElementById('forgetUsername').value = '';
+            document.getElementById('forgetEmail').value = '';
+            document.getElementById('forgetPassword').value = '';
         }
+
     }
 })

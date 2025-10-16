@@ -338,11 +338,12 @@
         <form action="#">
             <h1>找回密码</h1>
             <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
-                请输入您的注册邮箱
+                请输入您用户名与注册邮箱
             </p>
-            <input type="text" class="forget_password_button" placeholder="用户名" style="width: 50%">
+            <input type="text" class="forget_password_button" id = "forgetUsername" placeholder="用户名" style="width: 50%">
             <input type="email" id="forgetEmail" placeholder="邮箱地址" style="width: 50%" required>
-            <input type="text" class="forget_password_button" placeholder="新密码" style="width: 50%">
+            <input type="text" class="forget_password_button" id = "forgetPassword" placeholder="新密码" style="width: 50%">
+            <button type="button" @click="forgetPassword">提交</button>
             <div style="margin-top: 1rem;">
                 <a href="#" @click="goBack" style="font-size: 0.8rem; color: #ea4646;">返回登录</a>
             </div>
